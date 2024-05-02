@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.light header {
+  background: url(/bg-desktop-light.jpg);
+  background-size: cover;
+}
+
+.dark header {
+  background: url(/bg-desktop-dark.jpg);
+  background-size: cover;
+}
+
+.checked {
+  background: mediumaquamarine;
+}
+@media (max-width: 750px) {
+  .light header {
+    background: url(/bg-mobile-light.jpg);
+    background-size: cover;
+  }
+
+  .dark header {
+    background: url(/bg-mobile-dark.jpg);
+    background-size: cover;
+  }
+}
