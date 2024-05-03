@@ -4,7 +4,8 @@ import { TodoContext } from "../store/Context";
 
 function Header() {
   const inputVal = useRef("");
-  const { todo, settodo, lightMode, setlightMode } = useContext(TodoContext);
+  const { todo, settodo, lightMode, setlightMode, addTodo } =
+    useContext(TodoContext);
   function darkmode() {
     document.querySelector("html").style.backgroundColor = "black";
     if (!lightMode) {
@@ -34,10 +35,7 @@ function Header() {
             e.preventDefault();
             const newTask = inputVal.current.value;
             if (!newTask) return;
-            settodo((prev) => [
-              { id: Date.now(), taskName: newTask, hasCompleted: false },
-              ...prev,
-            ]);
+            addTodo(newTask);
             inputVal.current.value = "";
           }}
           className="mt-5 flex gap-1 bg-white dark:bg-black justify-between items-center p-2 rounded-lg"

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { TodoContext } from "../store/Context";
 import Task from "./Task";
+import Info from "./Info";
 
 function TaskList() {
   const { todo } = useContext(TodoContext);
@@ -9,6 +10,7 @@ function TaskList() {
       {todo.map((task) => (
         <Task key={task.taskName} task={task} />
       ))}
+      {todo.length > 0 && <Info />}
     </div>
   );
 }
