@@ -1,55 +1,104 @@
-import { useState } from "react";
+import { act, useEffect, useReducer, useState } from "react";
 import darkbg from "../public/bg-desktop-dark.jpg";
 import Header from "./components/Header";
 import { TodoContext } from "./store/Context";
 import Task from "./components/Task";
 import TaskList from "./components/TaskList";
 import Info from "./components/Info";
-function App() {
-  const [lightMode, setlightMode] = useState(false);
-  const [todo, settodo] = useState([]);
-  const addTodo = (newTask) => {
-    settodo((prev) => [
-      { id: Date.now(), taskName: newTask, hasCompleted: false },
-      ...prev,
-    ]);
-  };
-  // console.log(todo);
-  const deleteTodo = (task) => {
-    settodo(() => todo.filter((prev) => task !== prev.taskName));
-  };
 
-  const markComplete = (task) => {
-    let updatedTasks = todo.map((item) => {
-      if (item.taskName == task) {
+function taskReducrer(curr, action) {
+  let newTaskList = curr;
+  if (action.type === "NEW_TASK") {
+    newTaskList = [
+      ...curr,
+      {
+        id: action.payload.id,
+        taskName: action.payload.taskName,
+        hasCompleted: action.payload.hasCompleted,
+      },
+    ];
+  } else if (action.type === "DELETE") {
+    newTaskList = curr.filter(
+      (item) => item.taskName !== action.payload.taskName
+    );
+  } else if (action.type === "UPDATE") {
+    newTaskList = curr.map((item) => {
+      if (item.taskName == action.payload.taskName) {
         item.hasCompleted = true;
       }
       return item;
     });
-    settodo(updatedTasks);
+  } else if (action.type === "FILTER_COMPLETE") {
+    newTaskList = curr.filter((item) => item.hasCompleted);
+  } else if (action.type == "CLEAR_COMPLETE") {
+    newTaskList = curr.filter((item) => !item.hasCompleted);
+  } else if (action.type == "SHOW_ACTIVE") {
+    newTaskList = curr.filter((item) => !item.hasCompleted);
+  }
+  return newTaskList;
+}
+function App() {
+  const [lightMode, setlightMode] = useState(true);
+  const [todo, dispatchTask] = useReducer(taskReducrer, []);
+  const addTodo = (newTask) => {
+    const newTaskAction = {
+      type: "NEW_TASK",
+      payload: {
+        id: Date.now(),
+        taskName: newTask,
+        hasCompleted: false,
+      },
+    };
+    dispatchTask(newTaskAction);
+  };
+
+  const deleteTodo = (task) => {
+    const deleteItemAction = {
+      type: "DELETE",
+      payload: {
+        taskName: task,
+      },
+    };
+    dispatchTask(deleteItemAction);
+  };
+
+  const markComplete = (task) => {
+    const completeAction = {
+      type: "UPDATE",
+      payload: {
+        taskName: task,
+      },
+    };
+    dispatchTask(completeAction);
   };
 
   const showComplete = () => {
-    const CompletedTasks = todo.filter((item) => item.hasCompleted);
-    settodo(CompletedTasks);
+    const showCompletedTask = {
+      type: "FILTER_COMPLETE",
+    };
+    dispatchTask(showCompletedTask);
   };
 
   const clearComplete = () => {
-    const removedCompleted = todo.filter((item) => !item.hasCompleted);
-    settodo(removedCompleted);
+    const clearComplete = {
+      type: "CLEAR_COMPLETE",
+    };
+    dispatchTask(clearComplete);
   };
 
   const showActive = () => {
-    const activeTasks = todo.filter((item) => !item.hasCompleted);
-    settodo(activeTasks);
+    const showActiveTasks = {
+      type: "SHOW_ACTIVE",
+    };
+    dispatchTask(showActiveTasks);
   };
+
   return (
     <TodoContext.Provider
       value={{
         lightMode,
         setlightMode,
         todo,
-        settodo,
         addTodo,
         deleteTodo,
         markComplete,
@@ -65,5 +114,4 @@ function App() {
     </TodoContext.Provider>
   );
 }
-
 export default App;

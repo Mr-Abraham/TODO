@@ -8,7 +8,7 @@ function TaskList() {
   return (
     <div className="mx-6 relative bottom-14  rounded-xl bg-white dark:bg-slate-900 lg:w-[850px] lg:m-auto shadow-md ">
       {todo.map((task) => (
-        <Task key={task.taskName} task={task} />
+        <Task key={task.id} task={task} />
       ))}
       {todo.length > 0 && <Info />}
     </div>

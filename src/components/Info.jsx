@@ -4,7 +4,6 @@ import { TodoContext } from "../store/Context";
 function Info() {
   const { todo, settodo, showComplete, clearComplete, showActive } =
     useContext(TodoContext);
-  //   const ActiveNumbers = ;
 
   return (
     <div className="dark:bg-slate-900 dark:text-white lg:w-[850px] lg:m-auto shadow-md mx-4 my-5  lg:my-3">
